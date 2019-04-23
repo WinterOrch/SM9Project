@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="GM">
+      <UniqueIdentifier>{b0a04a75-3657-434c-93ae-9b6ac5d6c347}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GM\SM9">
+      <UniqueIdentifier>{9d08ca65-2ff0-496b-b4e4-4e3d9c2403f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GM\Miracl">
+      <UniqueIdentifier>{adb53450-eaf1-4bc2-bd22-9af98a4dfa3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GM\SM9\Random">
+      <UniqueIdentifier>{ad44f121-c944-4150-a26f-39a45388420f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GM\SM9\Units">
+      <UniqueIdentifier>{fb2fbf30-c415-4bab-963c-ee63a7f51f4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GM\MESSAGER">
+      <UniqueIdentifier>{9342f4bc-d833-4e63-b15b-1836b0fd83cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GM\SM3">
+      <UniqueIdentifier>{6aa4b04b-52c6-4279-87c6-2c8229146d7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GM\utils">
+      <UniqueIdentifier>{58a9167e-135e-4a3f-aac5-53fbc6a519b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GM\Miracl\lib">
+      <UniqueIdentifier>{699e0441-7149-4680-b10c-a3a8ad1d3722}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="SM9_Parameters.cpp">
+      <Filter>GM\SM9</Filter>
+    </ClCompile>
+    <ClCompile Include="BigMath.cpp">
+      <Filter>GM\Miracl</Filter>
+    </ClCompile>
+    <ClCompile Include="Random.cpp">
+      <Filter>GM\SM9\Random</Filter>
+    </ClCompile>
+    <ClCompile Include="源.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Convert.cpp">
+      <Filter>GM\Miracl</Filter>
+    </ClCompile>
+    <ClCompile Include="SM9.cpp">
+      <Filter>GM\SM9</Filter>
+    </ClCompile>
+    <ClCompile Include="SM3\YHashEngine.cpp">
+      <Filter>GM\SM3</Filter>
+    </ClCompile>
+    <ClCompile Include="SM3\YSM3.cpp">
+      <Filter>GM\SM3</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\YHex.cpp">
+      <Filter>GM\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Pairing.cpp">
+      <Filter>GM\SM9</Filter>
+    </ClCompile>
+    <ClCompile Include="SM9_KGC.cpp">
+      <Filter>GM\SM9</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SM9_Parameters.h">
+      <Filter>GM\SM9</Filter>
+    </ClInclude>
+    <ClInclude Include="BigMath.h">
+      <Filter>GM\Miracl</Filter>
+    </ClInclude>
+    <ClInclude Include="Random.h">
+      <Filter>GM\SM9\Random</Filter>
+    </ClInclude>
+    <ClInclude Include="Signature.h">
+      <Filter>GM\SM9\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="Convert.h">
+      <Filter>GM\Miracl</Filter>
+    </ClInclude>
+    <ClInclude Include="Status.h">
+      <Filter>GM\MESSAGER</Filter>
+    </ClInclude>
+    <ClInclude Include="SM9.h">
+      <Filter>GM\SM9</Filter>
+    </ClInclude>
+    <ClInclude Include="SM3\YHashEngine.h">
+      <Filter>GM\SM3</Filter>
+    </ClInclude>
+    <ClInclude Include="SM3\YSM3.h">
+      <Filter>GM\SM3</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\YHex.h">
+      <Filter>GM\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Pairing.h">
+      <Filter>GM\SM9</Filter>
+    </ClInclude>
+    <ClInclude Include="miracl.h">
+      <Filter>GM\Miracl\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="mirdef.h">
+      <Filter>GM\Miracl\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="MasterKeyPair.h">
+      <Filter>GM\SM9\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="SM9_KGC.h">
+      <Filter>GM\SM9</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="miracl.lib">
+      <Filter>GM\Miracl\lib</Filter>
+    </Library>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="miracl.pdb">
+      <Filter>GM\Miracl\lib</Filter>
+    </None>
+  </ItemGroup>
+</Project>
