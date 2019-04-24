@@ -40,6 +40,7 @@ public:
 		gets_big(var, (const unsigned char*)buf, length); }
 	
 	static string puts_ecn2(ecn2& var);
+	static bool gets_ecn2_byte128_xy(ecn2& var, const char* x_buf, const char* y_buf);
 	static bool gets_ecn2_byte128(ecn2& var, const char* buf);
 
 	static string puts_epoint(epoint* var);

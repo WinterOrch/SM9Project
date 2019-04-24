@@ -27,6 +27,35 @@ std::string Convert::puts_big(big& var) {
 	return result;
 }
 
+bool Convert::gets_ecn2_byte128_xy(ecn2& var, const char* x_buf, const char* y_buf) {
+	ecn2 r;
+	zzn2 x, y;
+	big a = NULL, b = NULL;
+
+	BigMath::init_ecn2(r);
+	BigMath::init_zzn2(x);
+	BigMath::init_zzn2(y);
+	BigMath::init_big(a);
+	BigMath::init_big(b);
+
+	bytes_to_big(BN_LEN, (char*)x_buf, b);
+	bytes_to_big(BN_LEN, (char*)x_buf + BN_LEN, a);
+	zzn2_from_bigs(a, b, &x);
+	bytes_to_big(BN_LEN, (char*)y_buf, b);
+	bytes_to_big(BN_LEN, (char*)y_buf + BN_LEN, a);
+	zzn2_from_bigs(a, b, &y);
+	BOOL ret = ecn2_set(&x, &y, &r);
+	if (ret) ecn2_copy(&r, &var);
+
+	BigMath::release_ecn2(r);
+	BigMath::release_zzn2(x);
+	BigMath::release_zzn2(y);
+	BigMath::release_big(a);
+	BigMath::release_big(b);
+
+	return ret ? true : false;
+}
+
 bool Convert::gets_ecn2_byte128(ecn2& var, const char* buf) {
 	ecn2 r;
 	zzn2 x, y;

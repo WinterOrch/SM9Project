@@ -45,5 +45,10 @@ public:
 	// 初始化及释放函数
 	static bool init();
 	static void release();
+
+private:
+	// norm X
+	static void setFrobeniusNormConstant();
+	static void zzn2_pow(zzn2& x, big& k, zzn2& r);
 	
 };

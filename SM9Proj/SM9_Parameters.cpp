@@ -147,6 +147,7 @@ END:
 }
 
 bool ParamSM9::init() {
+
 	bool res = false;
 	big temp = NULL;
 	big P1_x = NULL;
@@ -180,7 +181,23 @@ bool ParamSM9::init() {
 
 	ecurve_init(param_a, param_b, param_q, MR_PROJECTIVE);
 	Convert::gets_big(P1_x, (char*)SM9_xP1, sizeof(SM9_xP1));
-	Convert::gets_big(P1_y, (char*)SM9_yP1, sizeof(SM9_yP1));	// TODO
+	Convert::gets_big(P1_y, (char*)SM9_yP1, sizeof(SM9_yP1));
+
+	br = epoint_set(P1_x, P1_y, 0, param_P1);
+	res = br ? true : false;
+
+	if (res) {
+		res = Convert::gets_ecn2_byte128_xy(param_P2, (const char*)SM9_xP2, (const char*)SM9_yP2);
+		if (!res) {
+			goto END;
+		}
+	}
+	else
+		goto END;
+
+	setFrobeniusNormConstant();
+
+	res = true;
 
 END:
 	BigMath::release_big(P1_x);
@@ -204,4 +221,102 @@ void ParamSM9::release() {
 	BigMath::release_zzn2(norm_X);
 	mirexit();
 
+}
+
+void ParamSM9::setFrobeniusNormConstant()
+{
+	big p, zero, one, two;
+	zzn2 tmp_norm_X;
+
+	BigMath::init_big(p);
+	BigMath::init_big(zero);
+	BigMath::init_big(one);
+	BigMath::init_big(two);
+	BigMath::init_zzn2(tmp_norm_X);
+
+	convert(0, zero);
+	convert(1, one);
+	convert(2, two);
+	copy(mMip->modulus, p);
+	switch (get_mip()->pmod8)
+	{
+	case 5:
+		zzn2_from_bigs(zero, one, &tmp_norm_X);// = (sqrt(-1)^(p-1)/2
+		break;
+	case 3:
+		zzn2_from_bigs(one, one, &tmp_norm_X); // = (1 + sqrt(-1))^(p-1)/2
+		break;
+	case 7:
+		zzn2_from_bigs(two, one, &tmp_norm_X);// = (2 + sqrt(-1))^(p-1)/2
+	default: break;
+	}
+	decr(p, 1, p);
+	subdiv(p, 6, p);
+	zzn2_pow(tmp_norm_X, p, norm_X);
+
+	BigMath::release_big(p);
+	BigMath::release_big(zero);
+	BigMath::release_big(one);
+	BigMath::release_big(two);
+	BigMath::release_zzn2(tmp_norm_X);
+}
+
+void ParamSM9::zzn2_pow(zzn2& x, big& k, zzn2& r)
+{
+	int i, j, nb, n, nbw, nzs;
+	big zero;
+	zzn2 u2, t[16];
+
+	BigMath::init_big(zero);
+	BigMath::init_zzn2(u2);
+	for (i = 0; i < 16; i++)
+	{
+		BigMath::init_zzn2(t[i]);
+	}
+
+	if (zzn2_iszero(&x))
+	{
+		zzn2_zero(&r);
+		goto END;
+	}
+	if (size(k) == 0)
+	{
+		zzn2_from_int(1, &r);
+		goto END;
+	}
+	if (size(k) == 1) {
+		zzn2_copy(&x, &r);
+		goto END;
+	}
+
+	// Prepare table for windowing
+	zzn2_mul(&x, &x, &u2);
+	zzn2_copy(&x, &t[0]);
+	for (i = 1; i < 16; i++)
+	{
+		zzn2_mul(&t[i - 1], &u2, &t[i]);
+	}
+	// Left to right method - with windows
+	zzn2_copy(&x, &r);
+	nb = logb2(k);
+	if (nb > 1) for (i = nb - 2; i >= 0;)
+	{
+		//Note new parameter of window_size=5. Default to 5, but reduce to 4 (or even 3) to save RAM
+		n = mr_window(k, i, &nbw, &nzs, 5);
+		for (j = 0; j < nbw; j++) zzn2_mul(&r, &r, &r);
+		if (n > 0) zzn2_mul(&r, &t[n / 2], &r);
+		i -= nbw;
+		if (nzs)
+		{
+			for (j = 0; j < nzs; j++) zzn2_mul(&r, &r, &r);
+			i -= nzs;
+		}
+	}
+
+END:
+	BigMath::release_big(zero);
+	BigMath::release_zzn2(u2);
+	for (i = 0; i < 16; i++) {
+		BigMath::release_zzn2(t[i]);
+	}
 }
