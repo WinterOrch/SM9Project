@@ -7,6 +7,12 @@
 
 using namespace std;
 
+extern "C"
+{
+#include "miracl.h"
+#include "mirdef.h"
+}
+
 class SM9_KGC : public SM9 {
 public:
 	SM9_KGC() {};
@@ -14,6 +20,7 @@ public:
 
 public:
 	static MasterKeyPair genSignMasterKeyPair();
+	static MasterKeyPair genSignMasterKeyPairFromPri(const string& masterPrivateK);
 	static string genSignPrivateKey(const string& masterPrivateK, const string& id);
 
 private:

@@ -50,6 +50,8 @@ public:
 				msg = "t_1 = 0 Please Regenerate The Master Key Pair";
 				break;
 		}
+
+		return msg;
 	}
 
 

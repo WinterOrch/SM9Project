@@ -15,13 +15,40 @@ MasterKeyPair SM9_KGC::genSignMasterKeyPair() {
 	string privateK, publicK;
 
 	if (!SM9::isInited) {
-		throw exception(Status::getStatusTip(SM9_NOT_INITTED).c_str);
+		throw exception(Status::getStatusTip(SM9_NOT_INITTED).c_str());
 	}
 
 	BigMath::init_big(ke);
 	BigMath::init_ecn2(p_pub);
 
 	bigrand(ParamSM9::param_N, ke);
+
+	ecn2_copy(&ParamSM9::param_P2, &p_pub);
+	ecn2_mul(ke, &p_pub);
+
+	privateK = Convert::puts_big(ke);
+	publicK = Convert::puts_ecn2(p_pub);
+
+	BigMath::release_big(ke);
+	BigMath::release_ecn2(p_pub);
+
+	return MasterKeyPair(privateK, publicK);
+}
+
+MasterKeyPair SM9_KGC::genSignMasterKeyPairFromPri(const string& masterPrivateK) {
+	big ke = NULL;
+	ecn2 p_pub;
+
+	string privateK, publicK;
+
+	if (!SM9::isInited) {
+		throw exception(Status::getStatusTip(SM9_NOT_INITTED).c_str());
+	}
+
+	BigMath::init_big(ke);
+	BigMath::init_ecn2(p_pub);
+
+	Convert::gets_big(ke, masterPrivateK.c_str(), masterPrivateK.length());
 
 	ecn2_copy(&ParamSM9::param_P2, &p_pub);
 	ecn2_mul(ke, &p_pub);
@@ -119,7 +146,7 @@ END:
 	BigMath::release_big(tmp);
 
 	if (t_1_equal_zero) {
-		throw exception(Status::getStatusTip(status).c_str);
+		throw exception(Status::getStatusTip(status).c_str());
 	}
 
 	return res;

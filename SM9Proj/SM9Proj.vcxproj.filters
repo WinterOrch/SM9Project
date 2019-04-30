@@ -40,6 +40,9 @@
     <Filter Include="GM\Miracl\lib">
       <UniqueIdentifier>{699e0441-7149-4680-b10c-a3a8ad1d3722}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GM\Testor">
+      <UniqueIdentifier>{3234b9be-de0f-408c-84ff-366f51c1c8e9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SM9_Parameters.cpp">
@@ -74,6 +77,9 @@
     </ClCompile>
     <ClCompile Include="SM9_KGC.cpp">
       <Filter>GM\SM9</Filter>
+    </ClCompile>
+    <ClCompile Include="Testor.cpp">
+      <Filter>GM\Testor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -121,6 +127,9 @@
     </ClInclude>
     <ClInclude Include="SM9_KGC.h">
       <Filter>GM\SM9</Filter>
+    </ClInclude>
+    <ClInclude Include="Testor.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -11,7 +11,7 @@ public:
 	~MasterKeyPair() {};
 
 public:
-	string getPrivateKey() const { return mPublicK; }
+	string getPrivateKey() const { return mPrivateK; }
 	string getPublicKey() const { return mPublicK; }
 
 private:

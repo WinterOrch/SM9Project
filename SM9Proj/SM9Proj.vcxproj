@@ -141,6 +141,7 @@
     <ClCompile Include="SM9.cpp" />
     <ClCompile Include="SM9_KGC.cpp" />
     <ClCompile Include="SM9_Parameters.cpp" />
+    <ClCompile Include="Testor.cpp" />
     <ClCompile Include="utils\YHex.cpp" />
     <ClCompile Include="源.cpp" />
   </ItemGroup>
@@ -159,6 +160,7 @@
     <ClInclude Include="SM9_KGC.h" />
     <ClInclude Include="SM9_Parameters.h" />
     <ClInclude Include="Status.h" />
+    <ClInclude Include="Testor.h" />
     <ClInclude Include="utils\YHex.h" />
   </ItemGroup>
   <ItemGroup>

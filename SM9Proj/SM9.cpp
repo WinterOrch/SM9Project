@@ -8,6 +8,10 @@
 #include "Pairing.h"
 #include "../SM9Proj/SM3/YSM3.h"
 
+#ifdef IN_TEST
+#include <fstream>
+#include "../SM9Proj/utils/YHex.h"
+#endif
 
 bool SM9::isInited = false;
 
@@ -17,7 +21,7 @@ bool SM9::init() {
 		if (res)
 			isInited = true;
 		else {
-			throw exception(Status::getStatusTip(SM9_INITTING_FAILED).c_str);
+			throw exception(Status::getStatusTip(SM9_INITTING_FAILED).c_str());
 		}
 		return res;
 	}
@@ -49,7 +53,7 @@ string SM9::H_v(const string& z, int keyLen) {
 	for (int i = 0; i < num; i++) {									//	Step 3: Execute Hash Rounds
 
 		digestSM3.init();											//	Ha_i = Hv( Z||ct )
-		digestSM3.update(z.c_str, z.length());						//	Append Z
+		digestSM3.update(z.c_str(), z.length());						//	Append Z
 		digestSM3.update((ct >> 24) & 0xFF);						//	Append ct
 		digestSM3.update((ct >> 16) & 0xFF);
 		digestSM3.update((ct >> 8) & 0xFF);
@@ -90,7 +94,7 @@ string SM9::H(const string& Z) {
 
 	decr(ParamSM9::param_N, 1, N_Sub_1);							//	N_Sub_1 = N - 1
 
-	Convert::gets_big(bHa, ha.c_str, ha.length());					//	Step 5: Convert (String)Hash to Big
+	Convert::gets_big(bHa, ha.c_str(), ha.length());					//	Step 5: Convert (String)Hash to Big
 
 	divide(bHa, N_Sub_1, tmp);										//	Step 6: h_1=(Ha mod (n-1))+1
 	incr(bHa, 1, h);
@@ -138,9 +142,13 @@ Signature SM9::sign(const string& masterPublicK, const string& privateK, const s
 	big l = NULL;
 	big tmp = NULL;
 	big zero = NULL;
+
+#ifdef IN_TEST
+	ofstream outFile3("Signed.txt");
+#endif
 	
 	if (!isInited) {
-		throw exception(Status::getStatusTip(SM9_NOT_INITTED).c_str);
+		throw exception(Status::getStatusTip(SM9_NOT_INITTED).c_str());
 	}
 
 	BigMath::init_ecn2(p_pubs);
@@ -155,18 +163,22 @@ Signature SM9::sign(const string& masterPublicK, const string& privateK, const s
 	Convert::gets_ecn2_byte128(p_pubs, masterPublicK.c_str());						// Get P_pubs
 	if (!Pairing::calcRatePairing(g, p_pubs, ParamSM9::param_P1,					// A1: g = e( P_1, P_pubs )
 									ParamSM9::param_t, ParamSM9::norm_X)) {
-		throw exception(Status::getStatusTip(SM9_RATE_CAL_FAILED).c_str);
+		throw exception(Status::getStatusTip(SM9_RATE_CAL_FAILED).c_str());
 		goto END;
 	}
 
 	while (true) {
+#ifdef IN_TEST
+		string rHex = YHex::Decode("033C8616B06704813203DFD00965022ED15975C662337AED648835DC4B1CBE");
+		Convert::gets_big(r, rHex.c_str(), rHex.length());
+#else
 		bigrand(ParamSM9::param_N, r);												// A2: Generate Random r
-
+#endif
 		w = g.pow(r);
 		m = w.toString();															// A3: w = g ^ r
 
 		h = H_2(message, m);														// A4: h = H_2( M||w, N )
-		Convert::gets_big(h_2, h.c_str(), h.length);
+		Convert::gets_big(h_2, h.c_str(), h.length());
 
 		subtract(r, h_2, l);														// A5: l = ( r - h ) mod N
 		divide(l, ParamSM9::param_N, tmp);											// mod N
@@ -174,7 +186,20 @@ Signature SM9::sign(const string& masterPublicK, const string& privateK, const s
 		while (mr_compare(l, zero) < 0)
 			add(l, ParamSM9::param_N, l);
 		if (mr_compare(l, zero) != 0)												// Make Sure l != 0
+		{
+#ifdef IN_TEST
+			if (outFile3.is_open())
+			{
+				outFile3 << "------ Signiture g For SM9 Signing Alice ------\n";
+				outFile3 << YHex::Encode(g.toString()) << "\n";
+				outFile3 << "------ Signiture r For SM9 Signing Alice ------\n";
+				outFile3 << YHex::Encode(Convert::puts_big(r)) << "\n";
+				outFile3 << "------ Signiture w For SM9 Signing Alice ------\n";
+				outFile3 << YHex::Encode(m) << "\n";
+			}
+#endif
 			break;
+		}	
 	}
 
 	Convert::gets_epoint(ds_A, privateK.c_str());									// A6: S = [l]ds_A
@@ -183,6 +208,19 @@ Signature SM9::sign(const string& masterPublicK, const string& privateK, const s
 
 	res = Signature(h, s);															// A7: Signature( h, s )
 	
+#ifdef IN_TEST
+	if (outFile3.is_open())
+	{
+		outFile3 << "------ Signiture h For SM9 Signing Alice ------\n";
+		outFile3 << YHex::Encode(h) << "\n";
+		outFile3 << "------ Signiture l For SM9 Signing Alice ------\n";
+		outFile3 << YHex::Encode(Convert::puts_big(l)) << "\n";
+		outFile3 << "------ Signiture s For SM9 Signing Alice ------\n";
+		outFile3 << YHex::Encode(Convert::puts_epoint(S)) << "\n";
+
+		outFile3.close();
+	}
+#endif
 
 END:
 	BigMath::release_ecn2(p_pubs);
@@ -226,7 +264,7 @@ bool SM9::verify(const string& masterPublicK, const string& id, const Signature&
 	BigMath::init_big(h_1);
 
 	if (!isInited) {
-		throw exception(Status::getStatusTip(SM9_NOT_INITTED).c_str);
+		throw exception(Status::getStatusTip(SM9_NOT_INITTED).c_str());
 	}
 
 	mH = signature.getH();
@@ -234,7 +272,7 @@ bool SM9::verify(const string& masterPublicK, const string& id, const Signature&
 
 	decr(ParamSM9::param_N, 1, N_sub_1);										// B1: Check If h' Belongs to [1,N-1]
 	convert(1, one);
-	Convert::gets_big(h, mH.c_str(), mH.length);
+	Convert::gets_big(h, mH.c_str(), mH.length());
 	if ((mr_compare(h, one) < 0) | (mr_compare(h, N_sub_1) > 0)) {
 		numError = SM9_VERIFY_H_OUTRANGE;
 		goto END;
@@ -250,14 +288,14 @@ bool SM9::verify(const string& masterPublicK, const string& id, const Signature&
 	if (!Pairing::calcRatePairing(g, p_pubs, ParamSM9::param_P1,
 									ParamSM9::param_t, ParamSM9::norm_X)) {
 		numError = SM9_RATE_CAL_FAILED;
-		throw exception(Status::getStatusTip(SM9_RATE_CAL_FAILED).c_str);
+		throw exception(Status::getStatusTip(SM9_RATE_CAL_FAILED).c_str());
 		goto END;
 	}
 
 	t = g.pow(h);																// B4: t = g ^ h
 
 	mH_1 = H_1(id, HID_SIGN);													// B5: h_1 = H_1( ID_A || hid, N )
-	Convert::gets_big(h_1, mH_1.c_str(), mH_1.length);
+	Convert::gets_big(h_1, mH_1.c_str(), mH_1.length());
 
 	ecn2_copy(&ParamSM9::param_P2, &p);											// B6: P = [h_1]P_2 + P_pub-s
 	ecn2_mul(h_1, &p);
@@ -266,7 +304,7 @@ bool SM9::verify(const string& masterPublicK, const string& id, const Signature&
 	if (!Pairing::calcRatePairing(u, p, S, ParamSM9::param_t,					// B7: u = e( S', P )
 									ParamSM9::norm_X)) {
 		numError = SM9_RATE_CAL_FAILED;
-		throw exception(Status::getStatusTip(SM9_RATE_CAL_FAILED).c_str);
+		throw exception(Status::getStatusTip(SM9_RATE_CAL_FAILED).c_str());
 		goto END;
 	}
 

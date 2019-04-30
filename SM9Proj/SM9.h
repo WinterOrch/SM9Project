@@ -22,7 +22,7 @@ protected:
 
 public:
 	static bool init();
-	static void release();
+	static void release() noexcept;
 	
 
 public :

@@ -1,5 +1,29 @@
 #include <time.h>
 
+#include "SM9.h"
+#include "Testor.h"
+
+int main()
+{
+	clock_t tBegin, tTestEnd;
+	clock_t tInitDone, tReleaseDone;
+
+	tBegin = clock();
+
+	SM9::init();
+	tInitDone = clock();
+
+	Testor::KGC_Standard_Test();
+	tTestEnd = clock();
+
+	SM9::release();
+	tReleaseDone = clock();
+
+	printf("\n初始化耗时:%ld ms\n", tInitDone - tBegin);
+	printf("\n测试耗时:%ld ms\n", tTestEnd - tInitDone);
+	printf("\n释放耗时:%ld ms\n", tReleaseDone - tTestEnd);
+}
+/*
 extern "C"
 {
 #include "miracl.h"
@@ -42,3 +66,4 @@ int main()
 
 	return 0;
 }
+*/

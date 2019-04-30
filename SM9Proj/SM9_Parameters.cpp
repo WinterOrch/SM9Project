@@ -131,7 +131,7 @@ bool ParamSM9::isPointOnG1(epoint* var) {
 
 	// 令Q = ( x, y ),验证[N]Q = O;				
 	ecurve_mult(param_N, var, buf);				//	buf = [N]Q
-	if (point_at_infinity(buf) == true) {		//	检验buf是否为无穷点
+	if (point_at_infinity(buf) == TRUE) {		//	检验buf是否为无穷点
 		res = true;
 		goto END;
 	}
