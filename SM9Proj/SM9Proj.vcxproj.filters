@@ -54,9 +54,6 @@
     <ClCompile Include="Random.cpp">
       <Filter>GM\SM9\Random</Filter>
     </ClCompile>
-    <ClCompile Include="源.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Convert.cpp">
       <Filter>GM\Miracl</Filter>
     </ClCompile>
@@ -80,6 +77,15 @@
     </ClCompile>
     <ClCompile Include="Testor.cpp">
       <Filter>GM\Testor</Filter>
+    </ClCompile>
+    <ClCompile Include="test.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="KGC_main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Interact.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -129,6 +135,12 @@
       <Filter>GM\SM9</Filter>
     </ClInclude>
     <ClInclude Include="Testor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="KGC_main.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Interact.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
