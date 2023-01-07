@@ -329,3 +329,27 @@ END:
 
 	return res;
 }
+
+string SM9::MAC(const string& k, const string& z)
+{
+	YSM3 digestSM3;
+	digestSM3.init();
+	digestSM3.update(z.c_str(), z.length());
+	digestSM3.update(k.c_str(), k.length());
+	digestSM3.finish();
+	return digestSM3.getData();
+}
+
+string SM9::KDF(const string& z, int klen)
+{
+	return H_v(z, klen / 8);
+}
+
+string SM9::true_hv(const string& z)
+{
+	YSM3 digestSM3;
+	digestSM3.init();
+	digestSM3.update(z.c_str(), z.length());
+	digestSM3.finish();
+	return digestSM3.getData();
+}
