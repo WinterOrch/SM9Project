@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.28307.271
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SM9Proj", "SM9Proj\SM9Proj.vcxproj", "{3104B69D-AB20-4397-AA1E-20BEA8CE22B9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "YUtilsDemo", "C:\Users\yuant\Desktop\毕设\SM9Project\YUtilsDemo\YUtilsDemo.vcxproj", "{6E39417B-4696-4339-BA25-0DA1227E989D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
