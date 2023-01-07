@@ -12,7 +12,7 @@ using namespace std;
 #define HID_ENCRYPT			0x03
 
 /**
-* SM9Ëã·¨ÊµÏÖ
+* SM9ï¿½ã·¨Êµï¿½ï¿½
 * @author YUAN
 */
 class SM9 {
@@ -27,34 +27,34 @@ public:
 
 public :
 	/**
-	* Ç©Ãû
+	* Ç©ï¿½ï¿½
 	*
-	* @param masterPublicK	Ö÷¹«Ô¿
-	* @param privateK		ÓÃ»§Ç©ÃûË½Ô¿
-	* @param message		´ıÇ©ÏûÏ¢
-	* @return				Ç©ÃûÀàÊµÀı
+	* @param masterPublicK	ï¿½ï¿½ï¿½ï¿½Ô¿
+	* @param privateK		ï¿½Ã»ï¿½Ç©ï¿½ï¿½Ë½Ô¿
+	* @param message		ï¿½ï¿½Ç©ï¿½ï¿½Ï¢
+	* @return				Ç©ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½
 	*/
 	static Signature sign(const string& masterPublicK, const string& privateK, const string& message);
 
 	/**
-	* ÑéÖ¤
+	* ï¿½ï¿½Ö¤
 	*
-	* @param masterPublicK	Ö÷¹«Ô¿
-	* @param id				ÓÃ»§±êÊ¶
-	* @param message		´ıÑéÏûÏ¢
+	* @param masterPublicK	ï¿½ï¿½ï¿½ï¿½Ô¿
+	* @param id				ï¿½Ã»ï¿½ï¿½ï¿½Ê¶
+	* @param message		ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
 	* @return				true or false
 	*/
 	static bool verify(const string& masterPublicK, const string& id, const Signature& signature, const string& message);
 
 private:
 	/**
-	* H_1ºÍH_2µÄ¹²ÓĞ²¿·Ö£¬Í¨¹ıµ÷ÕûÊäÈëÊµÏÖÇ©ÃûºÍÑéÖ¤¹ı³ÌÖĞ²»Í¬µÄÃÜÂëº¯Êı¡£
-	* @return ×Ö·û´®¸ñÊ½µÄ´óÊı
+	* H_1ï¿½ï¿½H_2ï¿½Ä¹ï¿½ï¿½Ğ²ï¿½ï¿½Ö£ï¿½Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½Ç©ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½ï¿½Ğ²ï¿½Í¬ï¿½ï¿½ï¿½ï¿½ï¿½ëº¯ï¿½ï¿½ï¿½ï¿½
+	* @return ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ï¿½Ä´ï¿½ï¿½ï¿½
 	*/
 	static string H(const string&z);
 
 	/**
-	* Í¨¹ıSM3É¢ÁĞÖ´ĞĞ 8 * ceil( keyLen ) ÂÖÉ¢ÁĞ²¢´¦Àí×îºóÒ»×é¡£
+	* Í¨ï¿½ï¿½SM3É¢ï¿½ï¿½Ö´ï¿½ï¿½ 8 * ceil( keyLen ) ï¿½ï¿½É¢ï¿½Ğ²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½é¡£
 	* @return Ha_1 || Ha_2 ... || Ha_ceil(hlen/v) || Ha!_ceil(hlen/v)
 	*/
 	static string H_v(const string& z, int keyLen);
@@ -64,15 +64,16 @@ private:
 	static string KDF_bitlen(const string& z, int keyLen);
 	static string true_hv(const string& z);
 	static string encrypt(const string& masterPublicK, const string& privateK, const string& message);
+	static string decrypt(string cipher, const string uid, const string de_B)
 
 protected:
 	/**
-	* ÃÜÂëº¯ÊıH_1()£¬ÒÔÓÃ»§±êÊ¶¡¢Ç©ÃûË½Ô¿Éú³Éº¯ÊıÊ¶±ğ·ûºÍ¹şÏ£Í·ÎªÊäÈë£¬ÓÃÓÚÑéÖ¤Ç©Ãû¡£
+	* ï¿½ï¿½ï¿½ëº¯ï¿½ï¿½H_1()ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½Ê¶ï¿½ï¿½Ç©ï¿½ï¿½Ë½Ô¿ï¿½ï¿½ï¿½Éºï¿½ï¿½ï¿½Ê¶ï¿½ï¿½ï¿½ï¿½Í¹ï¿½Ï£Í·Îªï¿½ï¿½ï¿½ë£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¤Ç©ï¿½ï¿½ï¿½ï¿½
 	*/
 	static string H_1(const string& id, char hid);
 
 	/**
-	* ÃÜÂëº¯ÊıH_2()£¬ÒÔÏûÏ¢¡¢G_TÖĞµÄÔªËØºÍ¹şÏ£Í·ÎªÊäÈë£¬ÓÃÓÚÉú³ÉÇ©Ãû¡£
+	* ï¿½ï¿½ï¿½ëº¯ï¿½ï¿½H_2()ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½G_Tï¿½Ğµï¿½Ôªï¿½ØºÍ¹ï¿½Ï£Í·Îªï¿½ï¿½ï¿½ë£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç©ï¿½ï¿½ï¿½ï¿½
 	*/
 	static string H_2(const string& message, const string& w);
 

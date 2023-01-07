@@ -1,6 +1,7 @@
 #include "SM9.h"
 
 #include <math.h>
+#include <string>
 #include "SM9_Parameters.h"
 #include "Status.h"
 #include "BigMath.h"
@@ -354,6 +355,20 @@ string SM9::true_hv(const string& z)
 	return digestSM3.getData();
 }
 
+bool str_not_zero(const string& a)
+{
+	for (auto x : a) if (x) return 1;
+	return 0;
+}
+
+string str_xor(const string& a, const string& b)
+{
+	string c = a;
+	for (int i = 0; i < c.length(); i++)
+		c[i] ^= b[i];
+	return c;
+}
+
 string SM9::encrypt(const string& masterPublicK, const string& uid, const string& message)
 {
 	epoint* Q_B;
@@ -419,4 +434,55 @@ string SM9::encrypt(const string& masterPublicK, const string& uid, const string
 
 	}
 
+}
+
+string SM9::decrypt(string cipher, const string uid, const string mPrivateK)
+{
+	epoint *C_1, *C_3;
+	ecn2 de_B;
+	string mC_1, mC_2, mC_3;
+	Pairing w;
+	string mw;
+	int mlen;
+	int klen;
+	string K;
+	string K_1;
+	string K_2;
+	string u;
+	string message;
+
+	BigMath::init_epoint(C_1);
+	BigMath::init_epoint(C_3);
+
+	// B1: get C1
+	mC_1 = cipher.substr(0, BIG_LEN);
+	Convert::gets_epoint(C_1, mC_1.c_str());
+	if (!ParamSM9::isPointOnG1(C_1))
+		return NULL;
+
+	// B2: w = e(C_1, de_B)
+	Convert::gets_ecn2_byte128(de_B, mPrivateK.c_str());
+	Pairing::calcRatePairing(w, de_B, C_1, ParamSM9::param_t, ParamSM9::norm_X);
+	mw = w.toString();
+
+	// B3: decrypt 
+	mC_2 =
+		cipher.substr(BIG_LEN + 0x100);	// 0x100 is the length of SM3 output
+	mlen = mC_2.length();
+	klen = mlen + (0x100 / 8);	
+	K = H_v(mC_1, klen);
+	K_1 = K.substr(0, mlen);
+	if (!str_not_zero(K_1))
+		return NULL;
+	message = str_xor(mC_2, K_1);
+
+	// B4: varify hash
+	K_2 = K.substr(mlen);
+	u = SM9::MAC(K_2, mC_2);
+	mC_3 =
+		cipher.substr(BIG_LEN, 0x100);	// 0x100 is the length of SM3 output
+	if (!u.compare(mC_3))
+		return NULL;
+
+	return message;
 }
