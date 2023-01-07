@@ -61,8 +61,9 @@ private:
 
 	// add by qinglkyi
 	static string MAC(const string& k, const string& z);
-	static string KDF(const string& z, int keyLen);
+	static string KDF_bitlen(const string& z, int keyLen);
 	static string true_hv(const string& z);
+	static string encrypt(const string& masterPublicK, const string& privateK, const string& message);
 
 protected:
 	/**

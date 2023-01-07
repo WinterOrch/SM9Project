@@ -340,7 +340,7 @@ string SM9::MAC(const string& k, const string& z)
 	return digestSM3.getData();
 }
 
-string SM9::KDF(const string& z, int klen)
+string SM9::KDF_bitlen(const string& z, int klen)
 {
 	return H_v(z, klen / 8);
 }
@@ -352,4 +352,71 @@ string SM9::true_hv(const string& z)
 	digestSM3.update(z.c_str(), z.length());
 	digestSM3.finish();
 	return digestSM3.getData();
+}
+
+string SM9::encrypt(const string& masterPublicK, const string& uid, const string& message)
+{
+	epoint* Q_B;
+	epoint* p;
+	epoint* pub;
+	big h_1;
+	string mH_1;
+	big r;
+	epoint* C_1;
+	string mC_1;
+	Pairing g;
+	Pairing w;
+	string mw;
+	int mlen;
+	int klen;
+	string K;
+	string K_1;
+	string K_2;
+
+	BigMath::init_epoint(Q_B);
+	BigMath::init_epoint(p);
+	BigMath::init_epoint(pub);
+	BigMath::init_big(h_1);
+	BigMath::init_big(r);
+	BigMath::init_epoint(C_1);
+
+
+	// A1: Q_B = [H_1 (ID_B || hid, N)] P_1 + P_{pub-e}
+	// h_1 = H_1 (ID_B || hid, N)
+	mH_1 = H_1(uid, HID_ENCRYPT);
+	Convert::gets_big(h_1, mH_1.c_str(), mH_1.length());
+	// p = [h_1] P_1
+	ecurve_mult(h_1, ParamSM9::param_P1, p);
+	// Q_B = p + pub
+	Convert::gets_epoint(pub, masterPublicK.c_str());
+	ecurve_add(pub, p);
+
+	while (1) {
+		// A2: generate random number r \in [1, N - 1]
+		bigrand(ParamSM9::param_N, r);
+
+		// A3: C_1 = [r] Q_B
+		ecurve_mult(r, Q_B, C_1);
+		mC_1 = Convert::puts_epoint(C_1);
+
+		// A4: g = e(pub, P_2)
+		Pairing::calcRatePairing(g, ParamSM9::param_P2, pub, ParamSM9::param_t, ParamSM9::norm_X);
+
+		// A5: w = g^r
+		w = g.pow(r);
+		mw = w.toString();
+
+		// A6: 
+		// klen = mlen + k2_len (0x100)
+		mlen = message.length();
+		klen = mlen + (0x100 / 8);
+		// K = KDF(C_1 || w || ID_B, klen)
+		K = H_v(mC_1 + mw + uid, klen);
+		// K_1 = K.substr(0, mlen) K_2 = rest of K
+		K_1 = K.substr(0, mlen);
+		K_2 = K.substr(mlen);
+
+
+	}
+
 }
