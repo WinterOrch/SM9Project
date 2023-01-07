@@ -59,6 +59,12 @@ private:
 	*/
 	static string H_v(const string& z, int keyLen);
 
+	// add by qinglkyi
+	static string MAC(const string& k, const string& z);
+	static string KDF_bitlen(const string& z, int keyLen);
+	static string true_hv(const string& z);
+	static string encrypt(const string& masterPublicK, const string& privateK, const string& message);
+
 protected:
 	/**
 	* 密码函数H_1()，以用户标识、签名私钥生成函数识别符和哈希头为输入，用于验证签名。
